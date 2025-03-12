@@ -1,0 +1,31 @@
+@model IEnumerable<SimpleLibrary.Models.Author>
+@{
+    ViewData["Title"] = "Authors";
+}
+
+<h2>Authors</h2>
+
+<a href="@Url.Action("Create", "Author")" class="btn btn-success">Create New Author</a>
+<table class="table">
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var author in Model)
+    {
+        <tr>
+            <td>@author.Name</td>
+            <td>@author.Email</td>
+            <td>
+                <a href="@Url.Action("Details", "Author", new { id = author.Id })" class="btn btn-info">View</a>
+                <a href="@Url.Action("Edit", "Author", new { id = author.Id })" class="btn btn-primary">Edit</a>
+                <a href="@Url.Action("Delete", "Author", new { id = author.Id })" class="btn btn-danger">Delete</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

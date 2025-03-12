@@ -1,0 +1,25 @@
+@model SimpleLibrary.Models.Book
+@{
+    ViewData["Title"] = "Book Details";
+}
+
+<h2>Book Details</h2>
+
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">@Model.Name</h5>
+        <p class="card-text">Author: @Model.Author.Name</p>
+    </div>
+</div>
+
+<h3>Author Details</h3>
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">@Model.Author.Name</h5>
+        <p class="card-text">@Model.Author.Email</p>
+    </div>
+</div>
+
+<h3>Actions</h3>
+<a href="@Url.Action("Edit", "Book", new { id = Model.Id })" class="btn btn-primary">Edit</a>
+<a href="@Url.Action("Delete", "Book", new { id = Model.Id })" class="btn btn-danger">Delete</a>
