@@ -16,14 +16,12 @@ public class AuthorController : Controller
         _bookService = bookService;
     }
 
-    // List all authors
     public IActionResult Index()
     {
         var authors = _authorService.GetAll();
         return View(authors);
     }
 
-    // Create new author
     public IActionResult Create()
     {
         return View();
@@ -33,14 +31,10 @@ public class AuthorController : Controller
     [ValidateAntiForgeryToken]
     public IActionResult Create(Author author)
     {
-        {
-            _authorService.Add(author);
-            return RedirectToAction("Index");
-        }
-        return View(author);
+        _authorService.Add(author);
+        return RedirectToAction("Index");
     }
 
-    // Edit author details
     public IActionResult Edit(int id)
     {
         var author = _authorService.GetAll().FirstOrDefault(a => a.Id == id);
@@ -52,15 +46,10 @@ public class AuthorController : Controller
     [ValidateAntiForgeryToken]
     public IActionResult Edit(Author author)
     {
-        // if (ModelState.IsValid)
-        {
-            _authorService.Update(author);
-            return RedirectToAction("Index");
-        }
-        return View(author);
+        _authorService.Update(author);
+        return RedirectToAction("Index");
     }
 
-    // View details of the author and their books
     public IActionResult Details(int id)
     {
         var author = _authorService.GetAll().FirstOrDefault(a => a.Id == id);
@@ -72,12 +61,11 @@ public class AuthorController : Controller
         return View(author);
     }
 
-    // Delete author
     public IActionResult Delete(int id)
     {
         var author = _authorService.GetAll().FirstOrDefault(a => a.Id == id);
+        if (author == null) return NotFound();
         _authorService.Delete(id);
-        // if (author == null) return NotFound();
         return RedirectToAction("Index");
     }
 }

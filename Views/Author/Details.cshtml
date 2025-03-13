@@ -1,6 +1,6 @@
 @model SimpleLibrary.Models.Author
 @{
-ViewData["Title"] = "Author Details";
+    ViewData["Title"] = "Author Details";
 }
 
 <h2>Author Details</h2>
@@ -23,13 +23,13 @@ ViewData["Title"] = "Author Details";
     <tbody>
     @foreach (var book in Model.Books)
     {
-    <tr>
-        <td>@book.Name</td>
-        <td>
-            <a href="@Url.Action("Edit", "Book", new { id = book.Id })" class="btn btn-primary">Edit</a>
-            <a href="@Url.Action("Delete", "Book", new { id = book.Id })" class="btn btn-danger">Delete</a>
-        </td>
-    </tr>
+        <tr>
+            <td>@book.Name</td>
+            <td>
+                <a href="@Url.Action("Edit", "Book", new { id = book.Id })" class="btn btn-primary">Edit</a>
+                <a href="@Url.Action("Delete", "Book", new { id = book.Id })" class="btn btn-danger">Delete</a>
+            </td>
+        </tr>
     }
     </tbody>
 </table>
