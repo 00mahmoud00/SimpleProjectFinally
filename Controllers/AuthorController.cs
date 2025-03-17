@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using SimpleLibrary.Models;
 using SimpleLibrary.Services.Authors;
@@ -44,8 +45,9 @@ public class AuthorController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult Edit(Author author)
+        public IActionResult Update(Author author)
     {
+        Console.WriteLine(author);
         _authorService.Update(author);
         return RedirectToAction("Index");
     }

@@ -1,11 +1,9 @@
 @model SimpleLibrary.Models.Author
-@{
-    ViewData["Title"] = "Edit Author";
-}
 
 <h2>Edit Author</h2>
 
-<form asp-action="Edit">
+<form asp-action="Update">
+    <input type="hidden" asp-for="Id" />
     <div class="form-group">
         <label asp-for="Name" class="control-label"></label>
         <input asp-for="Name" class="form-control"/>
