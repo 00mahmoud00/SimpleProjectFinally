@@ -2,42 +2,39 @@ using SimpleLibrary.Models;
 
 namespace SimpleLibrary.Services.Authors;
 
-public class AuthorService : IAuthorService
+public class AuthorService(SimpleLibraryDbContext context) : IAuthorService
 {
-    private static List<Author> _authors = new List<Author>()
-    {
-        new Author() { Name = "Mahmoud", Email = "mahmoud@gmail.com", Id = 1 },
-    };
-
     public List<Author> GetAll()
     {
-        return _authors;
+        return context.Authors.ToList();
     }
 
     public void Add(Author author)
     {
-        author.Id = _authors.Count + 1;
-        _authors.Add(author);
+        context.Authors.Add(author);
+        context.SaveChanges();
     }
 
     public void Update(Author author)
     {
-        var existingAuthor = _authors.First(a => a.Id == author.Id);
+        var existingAuthor = context.Authors.First(a => a.Id == author.Id);
         existingAuthor.Name = author.Name;
         existingAuthor.Email = author.Email;
+        context.SaveChanges();
     }
 
     public void Delete(int id)
     {
-        var author = _authors.FirstOrDefault(a => a.Id == id);
+        var author = context.Authors.FirstOrDefault(a => a.Id == id);
         if (author != null)
         {
-            _authors.Remove(author);
+            context.Authors.Remove(author);
         }
+        context.SaveChanges();
     }
 
     public Author GetById(int? bookAuthorId)
     {
-        return _authors.First(a => a.Id == bookAuthorId);
+        return context.Authors.First(a => a.Id == bookAuthorId);
     }
 }

@@ -1,11 +1,15 @@
+using Microsoft.EntityFrameworkCore;
+using SimpleLibrary;
 using SimpleLibrary.Services.Authors;
 using SimpleLibrary.Services.Books;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddSingleton<IAuthorService, AuthorService>();
-builder.Services.AddSingleton<IBookService, BookService>();
+builder.Services.AddScoped<IAuthorService, AuthorService>();
+builder.Services.AddScoped<IBookService, BookService>();
+builder.Services.AddDbContext<SimpleLibraryDbContext>(options => 
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddControllersWithViews();
 var app = builder.Build();
 
