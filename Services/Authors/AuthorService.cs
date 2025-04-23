@@ -6,7 +6,9 @@ public class AuthorService(SimpleLibraryDbContext context) : IAuthorService
 {
     public List<Author> GetAll()
     {
-        return context.Authors.ToList();
+        return context
+            .Authors
+            .ToList();
     }
 
     public void Add(Author author)
@@ -20,6 +22,7 @@ public class AuthorService(SimpleLibraryDbContext context) : IAuthorService
         var existingAuthor = context.Authors.First(a => a.Id == author.Id);
         existingAuthor.Name = author.Name;
         existingAuthor.Email = author.Email;
+        Console.WriteLine(context.ChangeTracker.Entries().Select(e => e.State).First());
         context.SaveChanges();
     }
 
@@ -30,6 +33,7 @@ public class AuthorService(SimpleLibraryDbContext context) : IAuthorService
         {
             context.Authors.Remove(author);
         }
+        Console.WriteLine(context.ChangeTracker.Entries().Select(e => e.State).First());
         context.SaveChanges();
     }
 

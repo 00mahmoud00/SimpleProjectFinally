@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using SimpleLibrary;
@@ -11,9 +12,11 @@ using SimpleLibrary;
 namespace SimpleLibrary.Migrations
 {
     [DbContext(typeof(SimpleLibraryDbContext))]
-    partial class SimpleLibraryDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250423133036_exception")]
+    partial class exception
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -40,7 +43,7 @@ namespace SimpleLibrary.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Authors", (string)null);
+                    b.ToTable("Authors");
                 });
 
             modelBuilder.Entity("SimpleLibrary.Models.Book", b =>
@@ -66,7 +69,7 @@ namespace SimpleLibrary.Migrations
 
                     b.HasIndex("AuthorId");
 
-                    b.ToTable("Books", (string)null);
+                    b.ToTable("Books");
                 });
 
             modelBuilder.Entity("SimpleLibrary.Models.ExceptionLog", b =>
@@ -90,7 +93,7 @@ namespace SimpleLibrary.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ExceptionLogs", (string)null);
+                    b.ToTable("ExceptionLogs");
                 });
 
             modelBuilder.Entity("SimpleLibrary.Models.Book", b =>

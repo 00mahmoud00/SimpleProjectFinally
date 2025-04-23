@@ -1,0 +1,19 @@
+@model List<ExceptionLog>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>Message</th>
+        <th>StackTracce</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach(var ex in Model)
+    {
+        <tr>
+            <td>@ex.Message</td>
+            <td>@ex.StackTrace</td>
+        </tr>
+    }
+    </tbody>
+</table>

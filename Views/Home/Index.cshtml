@@ -3,6 +3,7 @@
     ViewData["Title"] = "Home Page";
 }
 
+<a asp-action="ThrowException" asp-controller="Home">Throw Exception</a>
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
     <h1>@Model.MapToIPv4().ToString()</h1>
