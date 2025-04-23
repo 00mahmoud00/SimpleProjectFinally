@@ -3,19 +3,20 @@ using SimpleLibrary.Services.ExceptionsLog;
 
 namespace SimpleLibrary;
 
-public class GlobalExceptionHandlerMiddlware
+public class GlobalExceptionHandlerMiddleware : IMiddleware
 {
-    private readonly RequestDelegate _next;
-    public GlobalExceptionHandlerMiddlware(RequestDelegate next)
+    private readonly IExceptionLogService _exceptionLogService;
+
+    public GlobalExceptionHandlerMiddleware(IExceptionLogService exceptionLogService)
     {
-        _next = next;
+        _exceptionLogService = exceptionLogService;
     }
-    
-    public async Task Invoke(HttpContext context,IExceptionLogService exceptionLogService)
+
+    public async Task InvokeAsync(HttpContext context, RequestDelegate next)
     {
         try
         {
-            await _next(context);
+            await next(context);
         }
         catch (Exception e)
         {
@@ -25,7 +26,7 @@ public class GlobalExceptionHandlerMiddlware
                 Message = e.Message,
                 StackTrace = e.StackTrace!,
             };
-            exceptionLogService.Add(exptionModel);
+            _exceptionLogService.Add(exptionModel);
             throw;
         }
     }

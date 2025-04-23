@@ -13,6 +13,7 @@ builder.Services.AddScoped<IExceptionLogService, ExceptionLogService>();
 builder.Services.AddDbContext<SimpleLibraryDbContext>(options => 
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddControllersWithViews();
+builder.Services.AddTransient<GlobalExceptionHandlerMiddleware>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -23,7 +24,7 @@ var app = builder.Build();
 }
 
 // app.UseHttpsRedirection();
-app.UseMiddleware<GlobalExceptionHandlerMiddlware>();
+app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
 app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthorization();

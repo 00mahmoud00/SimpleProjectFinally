@@ -3,14 +3,16 @@
 <table class="table">
     <thead>
     <tr>
+        <th>Time</th>
         <th>Message</th>
-        <th>StackTracce</th>
+        <th>StackTrace</th>
     </tr>
     </thead>
     <tbody>
     @foreach(var ex in Model)
     {
         <tr>
+            <td>@ex.DateCreate</td>
             <td>@ex.Message</td>
             <td>@ex.StackTrace</td>
         </tr>
