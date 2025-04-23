@@ -2,43 +2,50 @@ using SimpleLibrary.Models;
 
 namespace SimpleLibrary.Services.Authors;
 
-public class AuthorService(SimpleLibraryDbContext context) : IAuthorService
+public class AuthorService : IAuthorService
 {
+    private readonly SimpleLibraryDbContext _context;
+
+    public AuthorService(SimpleLibraryDbContext context)
+    {
+        _context = context;
+    }
+
     public List<Author> GetAll()
     {
-        return context
+        return _context
             .Authors
             .ToList();
     }
 
     public void Add(Author author)
     {
-        context.Authors.Add(author);
-        context.SaveChanges();
+        _context.Authors.Add(author);
+        _context.SaveChanges();
     }
 
     public void Update(Author author)
     {
-        var existingAuthor = context.Authors.First(a => a.Id == author.Id);
+        var existingAuthor = _context.Authors.First(a => a.Id == author.Id);
         existingAuthor.Name = author.Name;
         existingAuthor.Email = author.Email;
-        Console.WriteLine(context.ChangeTracker.Entries().Select(e => e.State).First());
-        context.SaveChanges();
+        Console.WriteLine(_context.ChangeTracker.Entries().Select(e => e.State).First());
+        _context.SaveChanges();
     }
 
     public void Delete(int id)
     {
-        var author = context.Authors.FirstOrDefault(a => a.Id == id);
+        var author = _context.Authors.FirstOrDefault(a => a.Id == id);
         if (author != null)
         {
-            context.Authors.Remove(author);
+            _context.Authors.Remove(author);
         }
-        Console.WriteLine(context.ChangeTracker.Entries().Select(e => e.State).First());
-        context.SaveChanges();
+        Console.WriteLine(_context.ChangeTracker.Entries().Select(e => e.State).First());
+        _context.SaveChanges();
     }
 
     public Author GetById(int? bookAuthorId)
     {
-        return context.Authors.First(a => a.Id == bookAuthorId);
+        return _context.Authors.First(a => a.Id == bookAuthorId);
     }
 }

@@ -6,17 +6,26 @@ using SimpleLibrary.Services.Books;
 
 namespace SimpleLibrary.Controllers;
 
-public class BookController(IBookService bookService, IAuthorService authorService) : Controller
+public class BookController : Controller
 {
+    private readonly IBookService _bookService;
+    private readonly IAuthorService _authorService;
+
+    public BookController(IBookService bookService, IAuthorService authorService)
+    {
+        _bookService = bookService;
+        _authorService = authorService;
+    }
+
     public IActionResult Index()
     {
-        var books = bookService.GetAll();
+        var books = _bookService.GetAll();
         return View(books);
     }
 
     public IActionResult Create()
     {
-        ViewBag.AuthorList = authorService.GetAll().Select(a => new SelectListItem()
+        ViewBag.AuthorList = _authorService.GetAll().Select(a => new SelectListItem()
         {
             Selected = false,
             Text = a.Name,
@@ -29,17 +38,17 @@ public class BookController(IBookService bookService, IAuthorService authorServi
     [ValidateAntiForgeryToken]
     public IActionResult Create(Book book)
     {
-        book.Author = authorService.GetById(book.AuthorId);
-        bookService.Add(book);
+        book.Author = _authorService.GetById(book.AuthorId);
+        _bookService.Add(book);
         return RedirectToAction("Index");
     }
 
     public IActionResult Edit(int id)
     {
-        var book = bookService.GetAll().FirstOrDefault(b => b.Id == id);
+        var book = _bookService.GetAll().FirstOrDefault(b => b.Id == id);
         if (book == null) return NotFound();
 
-        ViewBag.AuthorList = authorService.GetAll().Select(a => new SelectListItem()
+        ViewBag.AuthorList = _authorService.GetAll().Select(a => new SelectListItem()
         {
             Selected = book.AuthorId == a.Id,
             Text = a.Name,
@@ -52,13 +61,13 @@ public class BookController(IBookService bookService, IAuthorService authorServi
     [ValidateAntiForgeryToken]
     public IActionResult Edit(Book book)
     {
-        bookService.Update(book);
+        _bookService.Update(book);
         return RedirectToAction("Index");
     }
 
     public IActionResult Delete(int id)
     {
-        bookService.Delete(id);
+        _bookService.Delete(id);
         return RedirectToAction("Index");
     }
 }
