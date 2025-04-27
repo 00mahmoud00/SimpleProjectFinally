@@ -3,6 +3,7 @@ using SimpleLibrary;
 using SimpleLibrary.Services.Authors;
 using SimpleLibrary.Services.Books;
 using SimpleLibrary.Services.ExceptionsLog;
+using SimpleLibrary.Services.IO;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddScoped<IAuthorService, AuthorService>();
 builder.Services.AddScoped<IBookService, BookService>();
 builder.Services.AddScoped<IExceptionLogService, ExceptionLogService>();
+builder.Services.AddScoped<IFileService, FileService>();
 builder.Services.AddDbContext<SimpleLibraryDbContext>(options => 
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddControllersWithViews();
@@ -32,6 +34,10 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+app.Use(async (context, next) =>
+{
+    await next();
+});
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 AppContext.SetSwitch("Npgsql.DisableDateTimeInfinityConversions", true);
 app.Run();

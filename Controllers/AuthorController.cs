@@ -1,8 +1,11 @@
 using System.Text.Json;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SimpleLibrary.Models;
 using SimpleLibrary.Services.Authors;
 using SimpleLibrary.Services.Books;
+using SimpleLibrary.Services.IO;
+using SimpleLibrary.ViewModels;
 
 namespace SimpleLibrary.Controllers;
 
@@ -10,11 +13,12 @@ public class AuthorController : Controller
 {
     private readonly IAuthorService _authorService;
     private readonly IBookService _bookService;
-
-    public AuthorController(IAuthorService authorService, IBookService bookService)
+    private readonly IFileService _fileService;
+    public AuthorController(IAuthorService authorService, IBookService bookService, IFileService fileService)
     {
         _authorService = authorService;
         _bookService = bookService;
+        _fileService = fileService;
     }
 
     public IActionResult Index()
@@ -30,8 +34,15 @@ public class AuthorController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult Create(Author author)
+    public IActionResult Create(AuthorViewModel authorViewModel)
     {
+        var filePath = _fileService.UploadFile(authorViewModel.ImageFile!,"Authors");
+        var author = new Author()
+        {
+            Name = authorViewModel.Name,
+            Email = authorViewModel.Email,
+            ImagePath = filePath
+        };
         _authorService.Add(author);
         return RedirectToAction("Index");
     }
