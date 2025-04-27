@@ -1,6 +1,6 @@
 namespace SimpleLibrary.ViewModels;
 
-public class BookViewModel
+public class NewBookViewModel
 {
     public string Name { get; set; }
     public string Description { get; set; }

@@ -1,4 +1,4 @@
-@model IEnumerable<SimpleLibrary.Models.Author>
+@model IEnumerable<SimpleLibrary.ViewModels.AuthorsListViewModel>
 @{
     ViewData["Title"] = "Authors";
 }
@@ -9,7 +9,7 @@
 <table class="table">
     <thead>
     <tr>
-        @* <th>Image</th> *@
+        <th>Image</th>
         <th>Name</th>
         <th>Email</th>
         <th>Actions</th>
@@ -19,7 +19,7 @@
     @foreach (var author in Model)
     {
         <tr>
-            @* <td><img src="@author.ImagePath" style="height: 100px;width: 100px" alt="No Image"/></td> *@
+            <td><img src="@author.ImagePath" style="height: 100px;width: 100px" alt="No Image"/></td>
             <td>@author.Name</td>
             <td>@author.Email</td>
             <td>

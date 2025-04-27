@@ -23,7 +23,7 @@ public class FileService : IFileService
         using var stream = new FileStream(filePath, FileMode.Create);
         file.CopyTo(stream);
         
-        return Path.Combine(folder, fileName);
+        return Path.Combine("/",folder, fileName);
     }
 
     public void DeleteFile(string relativePath)

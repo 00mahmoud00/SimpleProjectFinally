@@ -1,26 +1,52 @@
-@model SimpleLibrary.Models.Book
+@model SimpleLibrary.ViewModels.BookEditViewModel
 @{
     ViewData["Title"] = "Edit Book";
 }
 
 <h2>Edit Book</h2>
 
-<form asp-action="Edit">
+<form asp-action="Edit" enctype="multipart/form-data" method="post"> 
+    <input type="hidden" asp-for="Id" />
+    <input type="hidden" asp-for="CurrentImagePath" />
+    
     <div class="form-group">
         <label asp-for="Name" class="control-label"></label>
-        <input asp-for="Name" class="form-control" />
+        <input asp-for="Name" class="form-control"/>
         <span asp-validation-for="Name" class="text-danger"></span>
     </div>
+    
     <div class="form-group">
         <label asp-for="Description" class="control-label"></label>
-        <input asp-for="Description" class="form-control" />
+        <input asp-for="Description" class="form-control"/>
         <span asp-validation-for="Description" class="text-danger"></span>
     </div>
+    
     <div class="form-group">
         <label asp-for="AuthorId" class="control-label"></label>
         <select asp-for="AuthorId" class="form-control" asp-items="ViewBag.AuthorList"></select>
         <span asp-validation-for="AuthorId" class="text-danger"></span>
     </div>
+    
+    <div class="form-group mb-3">
+        <label asp-for="ImageFile" class="form-label">Book Cover</label>
+        <input asp-for="ImageFile" type="file" class="form-control" />
+        <span asp-validation-for="ImageFile" class="text-danger"></span>
+    </div>
+    
+    @if (!string.IsNullOrEmpty(Model.CurrentImagePath))
+    {
+        <div class="form-group mb-3">
+            <label>Current Cover</label>
+            <div>
+                <img src="@Model.CurrentImagePath" alt="Book Cover" style="max-width: 200px;" />
+            </div>
+        </div>
+    }
+    
     <button type="submit" class="btn btn-primary">Save</button>
-    <a href="@Url.Action("Index", "Book")" class="btn btn-secondary">Back to List</a>
+    <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-secondary">Cancel</a>
 </form>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

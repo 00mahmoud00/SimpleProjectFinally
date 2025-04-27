@@ -1,19 +1,46 @@
-@model SimpleLibrary.Models.Author
+@model SimpleLibrary.ViewModels.AuthorEditViewModel
+@{
+    ViewData["Title"] = "Edit Author";
+}
 
 <h2>Edit Author</h2>
 
-<form asp-action="Update">
+<form asp-action="Edit" enctype="multipart/form-data" method="post"> 
     <input type="hidden" asp-for="Id" />
+    <input type="hidden" asp-for="CurrentImagePath" />
+    
     <div class="form-group">
         <label asp-for="Name" class="control-label"></label>
         <input asp-for="Name" class="form-control"/>
         <span asp-validation-for="Name" class="text-danger"></span>
     </div>
+    
     <div class="form-group">
         <label asp-for="Email" class="control-label"></label>
         <input asp-for="Email" class="form-control"/>
         <span asp-validation-for="Email" class="text-danger"></span>
     </div>
+    
+    <div class="form-group mb-3">
+        <label asp-for="ImageFile" class="form-label">Author Image</label>
+        <input asp-for="ImageFile" type="file" class="form-control" />
+        <span asp-validation-for="ImageFile" class="text-danger"></span>
+    </div>
+    
+    @if (!string.IsNullOrEmpty(Model.CurrentImagePath))
+    {
+        <div class="form-group mb-3">
+            <label>Current Image</label>
+            <div>
+                <img src="@Model.CurrentImagePath" alt="Author Image" style="max-width: 200px;" />
+            </div>
+        </div>
+    }
+    
     <button type="submit" class="btn btn-primary">Save</button>
-    <a href="@Url.Action("Index", "Author")" class="btn btn-secondary">Back to List</a>
+    <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-secondary">Cancel</a>
 </form>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

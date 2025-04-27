@@ -1,4 +1,4 @@
-@model SimpleLibrary.Models.Book
+@model SimpleLibrary.ViewModels.BookDetailsViewModel
 @{
     ViewData["Title"] = "Book Details";
 }
@@ -7,8 +7,9 @@
 
 <div class="card">
     <div class="card-body">
+        <img src="@Model.ImagePath" class="card-img-top" alt="@Model.Name"/>
         <h5 class="card-title">@Model.Name</h5>
-        <p class="card-text">Author: @Model.Author.Name</p>
+        <h5 class="card-title">@Model.Description</h5>
     </div>
 </div>
 

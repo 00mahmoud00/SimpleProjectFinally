@@ -2,8 +2,6 @@ using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using SimpleLibrary.Models;
-using SimpleLibrary.Services.Authors;
-using SimpleLibrary.Services.Books;
 using SimpleLibrary.Services.IO;
 using SimpleLibrary.ViewModels;
 
@@ -11,26 +9,31 @@ namespace SimpleLibrary.Controllers;
 
 public class BookController : Controller
 {
-    private readonly IBookService _bookService;
-    private readonly IAuthorService _authorService;
     private readonly IFileService _fileService;
-    public BookController(IBookService bookService, IAuthorService authorService, IFileService fileService)
+    private readonly SimpleLibraryDbContext _context;
+    public BookController(IFileService fileService, SimpleLibraryDbContext context)
     {
-        _bookService = bookService;
-        _authorService = authorService;
         _fileService = fileService;
+        _context = context;
     }
 
     public IActionResult Index()
     {
-        var books = _bookService.GetAll();
-        Console.WriteLine(JsonSerializer.Serialize(books));
+        var books = _context
+            .Books
+            .Select(b => new BooksListViewModel()
+            {
+                Id = b.Id,
+                Name = b.Name,
+                AuthorName = b.Author!.Name,
+                ImagePath = b.ImagePath,
+            }).ToList();
         return View(books);
     }
 
     public IActionResult Create()
     {
-        ViewBag.AuthorList = _authorService.GetAll().Select(a => new SelectListItem()
+        ViewBag.AuthorList = _context.Authors.Select(a => new SelectListItem()
         {
             Selected = false,
             Text = a.Name,
@@ -41,27 +44,58 @@ public class BookController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult Create(BookViewModel bookViewModel)
+    public IActionResult Create(NewBookViewModel newBookViewModel)
     {
-        Console.WriteLine(JsonSerializer.Serialize(bookViewModel,new JsonSerializerOptions() { WriteIndented = true }));
-        var imagePath = _fileService.UploadFile(bookViewModel.ImageFile);
+        Console.WriteLine(JsonSerializer.Serialize(newBookViewModel,new JsonSerializerOptions() { WriteIndented = true }));
+        var imagePath = _fileService.UploadFile(newBookViewModel.ImageFile,"Books");
         var book = new Book()
         {
-            Name = bookViewModel.Name,
-            Description = bookViewModel.Description,
-            AuthorId = bookViewModel.AuthorId,
+            Name = newBookViewModel.Name,
+            Description = newBookViewModel.Description,
+            AuthorId = newBookViewModel.AuthorId,
             ImagePath = imagePath
         };
-        _bookService.Add(book);
+        _context.Add(book);
+        _context.SaveChanges();
         return RedirectToAction("Index");
     }
 
+    public IActionResult Details(int id)
+    {
+        var book = _context.Books
+            .Where(b => b.Id == id)
+            .Select(b => new BookDetailsViewModel()
+            {
+                Id = b.Id,
+                Name = b.Name,
+                Description = b.Description,
+                ImagePath = b.ImagePath,
+                Author = new BookDetailsViewModel.AuthorDetails()
+                {
+                    Id = b.Author!.Id,
+                    Name = b.Author.Name,
+                    Email = b.Author.Email
+                }
+            })
+            .First();
+        return View(book);
+    }
     public IActionResult Edit(int id)
     {
-        var book = _bookService.GetAll().FirstOrDefault(b => b.Id == id);
-        if (book == null) return NotFound();
-
-        ViewBag.AuthorList = _authorService.GetAll().Select(a => new SelectListItem()
+        var book = _context
+            .Books
+            .Where(b => b.Id == id)
+            .Select(b => new BookEditViewModel
+            {
+                Id = b.Id,
+                Name = b.Name,
+                Description = b.Description,
+                AuthorId = b.AuthorId!.Value,
+                CurrentImagePath = b.ImagePath
+            })
+            .First();
+            
+        ViewBag.AuthorList = _context.Authors.Select(a => new SelectListItem()
         {
             Selected = book.AuthorId == a.Id,
             Text = a.Name,
@@ -69,18 +103,38 @@ public class BookController : Controller
         });
         return View(book);
     }
-
+    
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult Edit(Book book)
+    public IActionResult Edit(BookEditViewModel viewModel)
     {
-        _bookService.Update(book);
-        return RedirectToAction("Index");
+        if (!ModelState.IsValid)
+        {
+            ViewBag.AuthorList = _context.Authors.Select(a => new SelectListItem()
+            {
+                Selected = viewModel.AuthorId == a.Id,
+                Text = a.Name,
+                Value = a.Id.ToString()
+            });
+            return View(viewModel);
+        }
+        
+        var toUpdate = _context.Books.First(b => b.Id == viewModel.Id);
+        var imageUrl = viewModel.ImageFile == null ? toUpdate.ImagePath : _fileService.UploadFile(viewModel.ImageFile, "Books");
+        toUpdate.Name = viewModel.Name;
+        toUpdate.Description = viewModel.Description;
+        toUpdate.AuthorId = viewModel.AuthorId;
+        toUpdate.ImagePath = imageUrl;
+        
+        _context.SaveChanges();
+        return RedirectToAction("Details", new { id = viewModel.Id });
     }
 
     public IActionResult Delete(int id)
     {
-        _bookService.Delete(id);
+        var book = _context.Books.First(b => b.Id == id);
+        _context.Books.Remove(book);
+        _context.SaveChanges();
         return RedirectToAction("Index");
     }
 }

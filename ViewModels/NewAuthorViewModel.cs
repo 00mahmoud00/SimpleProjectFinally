@@ -1,6 +1,6 @@
 namespace SimpleLibrary.ViewModels;
 
-public class AuthorViewModel
+public class NewAuthorViewModel
 {
     public string Name { get; set; }
     public string Email { get; set; }

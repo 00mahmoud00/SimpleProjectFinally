@@ -1,19 +1,18 @@
 using Microsoft.EntityFrameworkCore;
 using SimpleLibrary;
-using SimpleLibrary.Services.Authors;
-using SimpleLibrary.Services.Books;
 using SimpleLibrary.Services.ExceptionsLog;
 using SimpleLibrary.Services.IO;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddScoped<IAuthorService, AuthorService>();
-builder.Services.AddScoped<IBookService, BookService>();
 builder.Services.AddScoped<IExceptionLogService, ExceptionLogService>();
 builder.Services.AddScoped<IFileService, FileService>();
 builder.Services.AddDbContext<SimpleLibraryDbContext>(options => 
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<SimpleLibraryDbContext>();
 builder.Services.AddControllersWithViews();
 builder.Services.AddTransient<GlobalExceptionHandlerMiddleware>();
 var app = builder.Build();

@@ -1,4 +1,4 @@
-@model IEnumerable<SimpleLibrary.Models.Book>
+@model IEnumerable<SimpleLibrary.ViewModels.BooksListViewModel>
 @{
     ViewData["Title"] = "Books";
 }
@@ -9,6 +9,7 @@
 <table class="table">
     <thead>
     <tr>
+        <th>Image</th>
         <th>Book Name</th>
         <th>Author</th>
         <th>Actions</th>
@@ -18,10 +19,10 @@
     @foreach (var book in Model)
     {
         <tr>
+            <td><img src="@book.ImagePath" alt="" style="width: 100px;height: 100px"/></td>
             <td>@book.Name</td>
-            <td>@book.Author.Name</td>
+            <td>@book.AuthorName</td>
             <td>
-                @* <a href="@Url.Action("Details", "Book", new { id = book.Id })" class="btn btn-info">View</a> *@
                 <a href="@Url.Action("Edit", "Book", new { id = book.Id })" class="btn btn-primary">Edit</a>
                 <a href="@Url.Action("Delete", "Book", new { id = book.Id })" class="btn btn-danger">Delete</a>
             </td>

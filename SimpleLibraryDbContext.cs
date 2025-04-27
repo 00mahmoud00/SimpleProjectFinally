@@ -1,9 +1,10 @@
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using SimpleLibrary.Models;
 
 namespace SimpleLibrary;
 
-public class SimpleLibraryDbContext : DbContext
+public class SimpleLibraryDbContext : IdentityDbContext
 {
     public SimpleLibraryDbContext(DbContextOptions<SimpleLibraryDbContext> options) : base(options)
     {
