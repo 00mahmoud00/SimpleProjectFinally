@@ -29,28 +29,10 @@ public class AccountController : Controller
         if (!ModelState.IsValid)
             return View(model);
 
-        // Validate the user's credentials
-        var user = await _userManager.FindByEmailAsync(model.Email);
-        if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
-        {
-            // Create authentication claims
-            var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.Name, user.UserName),
-                new Claim(ClaimTypes.Email, user.Email)
-            };
+        var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: false);
 
-            // Add roles to claims
-            var roles = await _userManager.GetRolesAsync(user);
-            claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
-
-            var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-
-            // Sign in the user with the generated claims
-            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
-
+        if (result.Succeeded)
             return RedirectToAction("Index", "Home");
-        }
 
         ModelState.AddModelError(string.Empty, "Invalid login attempt.");
         return View(model);
@@ -89,8 +71,7 @@ public class AccountController : Controller
         {
             ModelState.AddModelError(string.Empty, error.Description);
         }
-        
-        ModelState.AddModelError("IdentityResult",result.Errors.Select(e => e.Description).Aggregate((a,b) => a + " " + b));
+
         return View(model);
     }
 }
