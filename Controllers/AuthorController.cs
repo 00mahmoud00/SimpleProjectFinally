@@ -1,5 +1,5 @@
 using System.Text.Json;
-using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SimpleLibrary.Models;
 using SimpleLibrary.Services.IO;
@@ -7,6 +7,7 @@ using SimpleLibrary.ViewModels;
 
 namespace SimpleLibrary.Controllers;
 
+[Authorize(Roles = "Admin")]
 public class AuthorController : Controller
 {
     private readonly IFileService _fileService;
@@ -17,6 +18,7 @@ public class AuthorController : Controller
         _context = context;
     }
 
+    [ValidateAntiForgeryToken]
     public IActionResult Index()
     {
         var authors = _context

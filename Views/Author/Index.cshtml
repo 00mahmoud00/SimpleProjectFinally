@@ -2,7 +2,7 @@
 @{
     ViewData["Title"] = "Authors";
 }
-
+@Html.AntiForgeryToken()
 <h2>Authors</h2>
 
 <a href="@Url.Action("Create", "Author")" class="btn btn-success">Create New Author</a>
