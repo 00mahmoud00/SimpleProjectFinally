@@ -18,7 +18,6 @@ public class AuthorController : Controller
         _context = context;
     }
 
-    [ValidateAntiForgeryToken]
     public IActionResult Index()
     {
         var authors = _context

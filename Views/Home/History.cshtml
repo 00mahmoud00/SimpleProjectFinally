@@ -1,0 +1,33 @@
+@model IEnumerable<HistoryViewModel>
+
+<h2>Borrowing History</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Book</th>
+            <th>Borrow Date</th>
+            <th>Return Date</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var history in Model)
+        {
+            <tr>
+                <td>@history.BookTitle</td>
+                <td>@history.BorrowDate</td>
+                <td>@(history.ReturnDate?.ToString("g") ?? "Not Returned")</td>
+                <td>
+                    @if (history.ReturnDate == null)
+                    {
+                        <form asp-action="EndBorrow" method="post">
+                            <input type="hidden" name="borrowId" value="@history.BorrowId" />
+                            <button type="submit" class="btn btn-danger">Return</button>
+                        </form>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

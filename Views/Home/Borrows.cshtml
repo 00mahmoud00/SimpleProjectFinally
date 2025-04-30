@@ -1,0 +1,23 @@
+@model IEnumerable<Borrow>
+
+<h2>Active Borrows</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Book</th>
+            <th>User</th>
+            <th>Borrow Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var borrow in Model)
+        {
+            <tr>
+                <td>@borrow.Book.Name</td>
+                <td>@borrow.UserId</td>
+                <td>@borrow.BorrowDate</td>
+            </tr>
+        }
+    </tbody>
+</table>

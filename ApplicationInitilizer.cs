@@ -40,7 +40,6 @@ public static class ApplicationDbInitializer
             }
         }
 
-        // 3. Create Normal User
         var userEmail = "user@example.com";
         var userPassword = "User@123";
 

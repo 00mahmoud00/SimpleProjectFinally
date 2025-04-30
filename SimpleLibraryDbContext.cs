@@ -13,7 +13,8 @@ public class SimpleLibraryDbContext : IdentityDbContext
     public DbSet<Author> Authors { get; set; }
     public DbSet<Book> Books { get; set; }
     public DbSet<ExceptionLog> ExceptionLogs { get; set; }
-
+    public DbSet<Borrow> Borrows { get; set; }
+    
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Author>()

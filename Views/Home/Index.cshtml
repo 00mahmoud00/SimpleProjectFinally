@@ -1,11 +1,35 @@
-﻿@model System.Net.IPAddress
-@{
-    ViewData["Title"] = "Home Page";
-}
+﻿@model List<BookViewModel>
 
-<a asp-action="ThrowException" asp-controller="Home">Throw Exception</a>
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <h1>@Model.MapToIPv4().ToString()</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<h2>Books</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Borrow</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var book in Model)
+        {
+            <tr>
+                <td>@book.Title</td>
+                <td>@book.Author</td>
+                <td>
+                    @if (book.IsBorrowed)
+                    {
+                        <span>Not Available</span>
+                    }
+                    else
+                    {
+                        <form  method="post" asp-action="Borrow">
+                            <input type="hidden" name="bookId" value="@book.Id" />
+                            <button type="submit" class="btn btn-primary">Borrow</button>
+                        </form>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
