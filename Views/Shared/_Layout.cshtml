@@ -66,6 +66,12 @@
                             <a class="nav-link" href="@Url.Action("Index", "Exception")">Exceptions</a>
                         </li>
                     }
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" href="@Url.Action("Index", "Admin")">AdminUsers</a>
+                        </li>
+                    }
                 </ul>
                 <partial name="_LoginPartial"/>
             </div>

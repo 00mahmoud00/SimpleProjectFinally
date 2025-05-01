@@ -30,7 +30,8 @@ public class AccountController : Controller
             return View(model);
 
         var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: false);
-
+        
+        // check if admin redirect to the admin page
         if (result.Succeeded)
             return RedirectToAction("Index", "Home");
 
